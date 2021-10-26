@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+<!--
+  Copyright (c) 2021 Oracle and/or its affiliates.
+
+  Licensed under the Universal Permissive License v 1.0 as shown at
+  https://oss.oracle.com/licenses/upl.
+-->
+<cache-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://xmlns.oracle.com/coherence/coherence-cache-config"
+              xmlns:kafka="class://com.oracle.coherence.kafka.KafkaNamespaceHandler"
+              xsi:schemaLocation="http://xmlns.oracle.com/coherence/coherence-cache-config coherence-cache-config.xsd">
+  <caching-scheme-mapping>
+    <cache-mapping>
+      <cache-name>MyCache</cache-name>
+      <scheme-name>near-remote</scheme-name>
+    </cache-mapping>
+
+    <cache-mapping>
+      <cache-name>POFTopic</cache-name>
+      <scheme-name>near-remote</scheme-name>
+    </cache-mapping>
+
+    <cache-mapping>
+      <cache-name>KafkaPassthrough</cache-name>
+      <scheme-name>near-remote</scheme-name>
+    </cache-mapping>
+
+    <cache-mapping>
+      <cache-name>foo</cache-name>
+      <scheme-name>partitioned-rwbm-kafka</scheme-name>
+    </cache-mapping>
+
+    <cache-mapping>
+      <cache-name>TestPassthrough</cache-name>
+      <scheme-name>partitioned-rwbm-passthrough</scheme-name>
+    </cache-mapping>
+
+    <cache-mapping>
+      <cache-name>TestException</cache-name>
+      <scheme-name>partitioned-rwbm-invalid-bootstrap</scheme-name>
+    </cache-mapping>
+
+  </caching-scheme-mapping>
+
+  <caching-schemes>
+    <distributed-scheme>
+      <scheme-name>partitioned-rwbm-kafka</scheme-name>
+
+      <backing-map-scheme>
+        <partitioned>true</partitioned>
+        <read-write-backing-map-scheme>
+          <internal-cache-scheme>
+            <local-scheme>
+            </local-scheme>
+          </internal-cache-scheme>
+          <cachestore-scheme>
+            <class-scheme>
+              <kafka:producer>
+                <!-- use default class -->
+                <kafka:topic-name>{cache-name}</kafka:topic-name>
+                <!-- default for passthrough is false -->
+                <kafka:bootstrap-servers>localhost:19092</kafka:bootstrap-servers>
+                <kafka:key-serializer>org.apache.kafka.common.serialization.StringSerializer</kafka:key-serializer>
+                <kafka:value-serializer>org.apache.kafka.common.serialization.StringSerializer</kafka:value-serializer>
+                <kafka:max-block-ms>5000</kafka:max-block-ms>
+                <kafka:some-dummy-property>{cache-name}</kafka:some-dummy-property>
+              </kafka:producer>
+            </class-scheme>
+          </cachestore-scheme>
+        </read-write-backing-map-scheme>
+      </backing-map-scheme>
+
+      <autostart>true</autostart>
+    </distributed-scheme>
+
+    <distributed-scheme>
+      <scheme-name>partitioned-rwbm-passthrough</scheme-name>
+
+      <backing-map-scheme>
+        <partitioned>true</partitioned>
+        <read-write-backing-map-scheme>
+          <internal-cache-scheme>
+            <local-scheme>
+            </local-scheme>
+          </internal-cache-scheme>
+          <cachestore-scheme>
+            <class-scheme>
+              <kafka:producer>
+                <kafka:entry-store-class-name>com.oracle.coherence.kafka.KafkaEntryStore</kafka:entry-store-class-name>
+                <kafka:topic-name>KafkaPassthrough</kafka:topic-name>
+                <kafka:passthrough>true</kafka:passthrough>
+                <kafka:bootstrap-servers>localhost:19092</kafka:bootstrap-servers>
+                <kafka:max-block-ms>5000</kafka:max-block-ms>
+              </kafka:producer>
+            </class-scheme>
+          </cachestore-scheme>
+        </read-write-backing-map-scheme>
+      </backing-map-scheme>
+
+      <autostart>true</autostart>
+    </distributed-scheme>
+
+    <distributed-scheme>
+      <scheme-name>partitioned-rwbm-invalid-bootstrap</scheme-name>
+
+      <backing-map-scheme>
+        <partitioned>true</partitioned>
+        <read-write-backing-map-scheme>
+          <internal-cache-scheme>
+            <local-scheme>
+            </local-scheme>
+          </internal-cache-scheme>
+          <cachestore-scheme>
+            <class-scheme>
+              <kafka:producer>
+                <kafka:entry-store-class-name>com.oracle.coherence.kafka.KafkaEntryStore</kafka:entry-store-class-name>
+                <kafka:topic-name>TestException</kafka:topic-name>
+                <kafka:passthrough>true</kafka:passthrough>
+                <kafka:bootstrap-servers>invalid:9999</kafka:bootstrap-servers>
+                <kafka:max-block-ms>5000</kafka:max-block-ms>
+              </kafka:producer>
+            </class-scheme>
+          </cachestore-scheme>
+        </read-write-backing-map-scheme>
+      </backing-map-scheme>
+
+      <autostart>true</autostart>
+    </distributed-scheme>
+
+    <!-- near caching scheme for clustered clients -->
+    <near-scheme>
+      <scheme-name>near-direct</scheme-name>
+      <front-scheme>
+        <local-scheme>
+          <high-units>{front-limit-entries 10000}</high-units>
+        </local-scheme>
+      </front-scheme>
+      <back-scheme>
+        <distributed-scheme>
+          <scheme-ref>thin-direct</scheme-ref>
+        </distributed-scheme>
+      </back-scheme>
+    </near-scheme>
+
+    <!-- near caching scheme for extend clients -->
+    <near-scheme>
+      <scheme-name>near-remote</scheme-name>
+      <scheme-ref>near-direct</scheme-ref>
+      <back-scheme>
+        <remote-cache-scheme>
+          <scheme-ref>thin-remote</scheme-ref>
+        </remote-cache-scheme>
+      </back-scheme>
+    </near-scheme>
+
+    <!-- partitioned caching scheme for clustered clients -->
+    <distributed-scheme>
+      <scheme-name>thin-direct</scheme-name>
+      <scheme-ref>server</scheme-ref>
+      <local-storage system-property="coherence.distributed.localstorage">false</local-storage>
+      <autostart>false</autostart>
+    </distributed-scheme>
+
+    <!-- remote caching scheme for accessing the proxy from extend clients -->
+    <remote-cache-scheme>
+      <scheme-name>thin-remote</scheme-name>
+      <service-name>Proxy1</service-name>
+      <initiator-config>
+        <tcp-initiator>
+          <remote-addresses>
+            <socket-address>
+              <address>localhost</address>
+              <port>7077</port>
+            </socket-address>
+          </remote-addresses>
+        </tcp-initiator>
+        <outgoing-message-handler>
+          <request-timeout>30s</request-timeout>
+        </outgoing-message-handler>
+      </initiator-config>
+    </remote-cache-scheme>
+
+    <distributed-scheme>
+      <scheme-name>server</scheme-name>
+      <service-name>PartitionedCache</service-name>
+      <local-storage system-property="coherence.distributed.localstorage">true</local-storage>
+      <backing-map-scheme>
+        <local-scheme>
+          <high-units>{back-limit-bytes 0B}</high-units>
+        </local-scheme>
+      </backing-map-scheme>
+      <autostart>true</autostart>
+    </distributed-scheme>
+  </caching-schemes>
+</cache-config>

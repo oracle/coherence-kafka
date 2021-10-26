@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!--
+  Copyright (c) 2021 Oracle and/or its affiliates.
+
+  Licensed under the Universal Permissive License v 1.0 as shown at
+  https://oss.oracle.com/licenses/upl.
+-->
+<schema xmlns="http://xmlns.oracle.com/coherence/schema"
+       xmlns:java="http://xmlns.oracle.com/coherence/schema/java"
+       xmlns:dotnet="http://xmlns.oracle.com/coherence/schema/dotnet"
+       xmlns:cpp="http://xmlns.oracle.com/coherence/schema/cpp"
+       external="true">
+
+  <!-- Coherence types necessary for evolution-->
+
+  <type name="Remote$Supplier">
+    <java:type name="com.tangosol.util.function.Remote$Supplier"/>
+  </type>
+
+  <type name="Binary">
+    <java:type name="com.tangosol.util.Binary"/>
+  </type>
+
+  <type name="Object">
+    <java:type name="java.lang.Object">
+      <java:alias name="TK;"/>
+      <java:alias name="TV;"/>
+      <java:alias name="+TK;"/>
+      <java:alias name="+TV;"/>
+    </java:type>
+  </type>
+
+  <type name="Collection">
+    <java:type name="java.util.Collection"/>
+  </type>
+
+</schema>

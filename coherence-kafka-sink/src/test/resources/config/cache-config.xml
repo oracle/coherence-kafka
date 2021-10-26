@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!--
+  Copyright (c) 2021 Oracle and/or its affiliates.
+
+  Licensed under the Universal Permissive License v 1.0 as shown at
+  https://oss.oracle.com/licenses/upl.
+-->
+<cache-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://xmlns.oracle.com/coherence/coherence-cache-config"
+              xsi:schemaLocation="http://xmlns.oracle.com/coherence/coherence-cache-config coherence-cache-config.xsd">
+  <scope-name>coh-sink</scope-name>
+  <caching-scheme-mapping>
+    <cache-mapping>
+      <cache-name>MyCache</cache-name>
+      <scheme-name>server</scheme-name>
+    </cache-mapping>
+    <cache-mapping>
+      <cache-name>POFTopic</cache-name>
+      <scheme-name>server</scheme-name>
+    </cache-mapping>
+    <cache-mapping>
+      <cache-name>KafkaPassthrough</cache-name>
+      <scheme-name>server</scheme-name>
+    </cache-mapping>
+  </caching-scheme-mapping>
+
+  <caching-schemes>
+    <distributed-scheme>
+      <scheme-name>server</scheme-name>
+      <service-name>PartitionedCache1</service-name>
+      <local-storage system-property="coherence.distributed.localstorage">true</local-storage>
+      <backing-map-scheme>
+        <local-scheme>
+          <high-units>{back-limit-bytes 0B}</high-units>
+        </local-scheme>
+      </backing-map-scheme>
+      <autostart>true</autostart>
+    </distributed-scheme>
+
+    <proxy-scheme>
+      <service-name>Proxy1</service-name>
+      <acceptor-config>
+        <tcp-acceptor>
+          <address-provider>
+            <local-address>
+              <address>localhost</address>
+              <port>7077</port>
+              <port-auto-adjust>false</port-auto-adjust>
+            </local-address>
+          </address-provider>
+        </tcp-acceptor>
+      </acceptor-config>
+      <autostart>true</autostart>
+    </proxy-scheme>
+  </caching-schemes>
+</cache-config>

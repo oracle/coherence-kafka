@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2021 Oracle and/or its affiliates.
+
+  Licensed under the Universal Permissive License v 1.0 as shown at
+  https://oss.oracle.com/licenses/upl.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>coherence-kafka</artifactId>
+    <groupId>com.oracle.coherence.kafka</groupId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>coherence-kafka-core</artifactId>
+
+  <description>
+    Core integration functionality between Coherence and Kafka
+  </description>
+
+  <dependencies>
+    <!-- Coherence -->
+    <dependency>
+      <groupId>${coherence.groupId}</groupId>
+      <artifactId>coherence</artifactId>
+      <version>${coherence.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Apache Kafka -->
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-clients</artifactId>
+    </dependency>
+
+    <!-- test dependencies -->
+    <dependency>
+      <groupId>com.oracle.coherence.kafka</groupId>
+      <artifactId>coherence-kafka-pof</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.oracle.coherence.kafka</groupId>
+      <artifactId>coherence-kafka-pof</artifactId>
+      <type>test-jar</type>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-jdk14</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+</project>
