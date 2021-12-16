@@ -13,3 +13,5 @@ buildNumber.properties
 .idea
 *.iml
 *.ipr
+
+.flattened-pom.xml
