@@ -49,6 +49,19 @@
     <nexus.staging.maven.plugin.version>1.6.7</nexus.staging.maven.plugin.version>
   </properties>
 
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <name>Coherence Snapshot Repository</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <name>Coherence Release Repository</name>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
+
   <dependencyManagement>
     <dependencies>
       <!-- Coherence -->
