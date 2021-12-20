@@ -444,24 +444,6 @@
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>flatten-maven-plugin</artifactId>
                     </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>${maven.gpg.plugin.version}</version>
-                        <configuration>
-                            <skip>true</skip>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>${nexus.staging.maven.plugin.version}</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
-                            <skipLocalStaging>true</skipLocalStaging>
-                        </configuration>
-                    </plugin>
                 </plugins>
             </build>
         </profile>
