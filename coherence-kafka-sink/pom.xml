@@ -18,9 +18,8 @@
     </parent>
 
     <groupId>com.oracle.coherence.kafka.connect</groupId>
-    <version>${revision}</version>
-
     <artifactId>coherence-kafka-sink</artifactId>
+    <version>${revision}</version>
 
     <description>A Kafka Connect plugin for copying data into Coherence</description>
 
@@ -33,6 +32,7 @@
         <javax.json.version>1.1.4</javax.json.version>
         <javax.json.bind.version>1.0</javax.json.bind.version>
         <yasson.version>1.0.9</yasson.version>
+        <skipITs>false</skipITs>
     </properties>
 
     <dependencies>
@@ -98,6 +98,134 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/oracle-kafka-connect-coherence-version.properties</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>**/oracle-kafka-connect-coherence-version.properties</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <source>11</source>
+                </configuration>
+            </plugin>
+            <!-- test classes to add serializers to connect plugin image -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/config/*</exclude>
+                        <exclude>**/*.xml</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.oracle.coherence.kafka</groupId>
+                                    <artifactId>coherence-kafka-pof</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>test-jar</type>
+                                    <outputDirectory>${project.build.directory}/test-classes</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>javax.json.bind</groupId>
+                                    <artifactId>javax.json.bind-api</artifactId>
+                                    <version>${javax.json.bind.version}</version>
+                                    <outputDirectory>${project.build.directory}/test-classes</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.glassfish</groupId>
+                                    <artifactId>javax.json</artifactId>
+                                    <version>${javax.json.version}</version>
+                                    <outputDirectory>${project.build.directory}/test-classes</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                     <groupId>org.eclipse</groupId>
+                                     <artifactId>yasson</artifactId>
+                                     <version>${yasson.version}</version>
+                                     <outputDirectory>${project.build.directory}/test-classes</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <skipAssembly>true</skipAssembly>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>io.confluent</groupId>
+                <version>${kafka.connect.maven.plugin.version}</version>
+                <artifactId>kafka-connect-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>kafka-connect</goal>
+                        </goals>
+                        <configuration>
+                            <title>Kafka Connect Coherence</title>
+                            <documentationUrl>https://www.oracle.com</documentationUrl>
+                            <supportProviderName>Oracle, Inc.</supportProviderName>
+                            <supportSummary>Kafka Connect Coherence</supportSummary>
+                            <supportUrl>https://www.oracle.com</supportUrl>
+
+                            <ownerUsername>oracle</ownerUsername>
+
+                            <componentTypes>
+                                <componentType>sink</componentType>
+                            </componentTypes>
+
+                            <tags>
+                                <tag>cache</tag>
+                                <tag>coherence</tag>
+                            </tags>
+
+                            <confluentControlCenterIntegration>false</confluentControlCenterIntegration>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
     <profiles>
         <profile>
             <id>default</id>
@@ -105,131 +233,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <build>
-                <resources>
-                    <resource>
-                        <directory>src/main/resources</directory>
-                        <filtering>true</filtering>
-                        <includes>
-                            <include>**/oracle-kafka-connect-coherence-version.properties</include>
-                        </includes>
-                    </resource>
-                    <resource>
-                        <directory>src/main/resources</directory>
-                        <filtering>false</filtering>
-                        <excludes>
-                            <exclude>**/oracle-kafka-connect-coherence-version.properties</exclude>
-                        </excludes>
-                    </resource>
-                </resources>
                 <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.1.1</version>
-                        <configuration>
-                            <source>11</source>
-                        </configuration>
-                    </plugin>
-                    <!-- test classes to add serializers to connect plugin image -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <version>3.2.0</version>
-                        <configuration>
-                            <excludes>
-                                <exclude>**/config/*</exclude>
-                                <exclude>**/*.xml</exclude>
-                            </excludes>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>test-jar</goal>
-                                </goals>
-                           </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>unpack</id>
-                                <phase>process-test-classes</phase>
-                                <goals>
-                                    <goal>copy</goal>
-                                </goals>
-                                <configuration>
-                                     <artifactItems>
-                                          <artifactItem>
-                                              <groupId>com.oracle.coherence.kafka</groupId>
-                                              <artifactId>coherence-kafka-pof</artifactId>
-                                              <version>${project.version}</version>
-                                              <type>test-jar</type>
-                                              <outputDirectory>${project.build.directory}/test-classes</outputDirectory>
-                                          </artifactItem>
-                                          <artifactItem>
-                                              <groupId>javax.json.bind</groupId>
-                                              <artifactId>javax.json.bind-api</artifactId>
-                                              <version>${javax.json.bind.version}</version>
-                                              <outputDirectory>${project.build.directory}/test-classes</outputDirectory>
-                                          </artifactItem>
-                                          <artifactItem>
-                                              <groupId>org.glassfish</groupId>
-                                              <artifactId>javax.json</artifactId>
-                                              <version>${javax.json.version}</version>
-                                              <outputDirectory>${project.build.directory}/test-classes</outputDirectory>
-                                          </artifactItem>
-                                          <artifactItem>
-                                              <groupId>org.eclipse</groupId>
-                                              <artifactId>yasson</artifactId>
-                                              <version>${yasson.version}</version>
-                                              <outputDirectory>${project.build.directory}/test-classes</outputDirectory>
-                                          </artifactItem>
-                                     </artifactItems>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-assembly-plugin</artifactId>
-                        <configuration>
-                            <skipAssembly>true</skipAssembly>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>io.confluent</groupId>
-                        <version>${kafka.connect.maven.plugin.version}</version>
-                        <artifactId>kafka-connect-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>kafka-connect</goal>
-                                </goals>
-                                <configuration>
-                                    <title>Kafka Connect Coherence</title>
-                                    <documentationUrl>https://www.oracle.com</documentationUrl>
-                                    <supportProviderName>Oracle, Inc.</supportProviderName>
-                                    <supportSummary>Kafka Connect Coherence</supportSummary>
-                                    <supportUrl>https://www.oracle.com</supportUrl>
-
-                                    <ownerUsername>oracle</ownerUsername>
-
-                                    <componentTypes>
-                                        <componentType>sink</componentType>
-                                    </componentTypes>
-
-                                    <tags>
-                                        <tag>cache</tag>
-                                        <tag>coherence</tag>
-                                    </tags>
-
-                                    <confluentControlCenterIntegration>false</confluentControlCenterIntegration>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-
                     <plugin>
                         <groupId>io.fabric8</groupId>
                         <artifactId>docker-maven-plugin</artifactId>
@@ -242,6 +246,7 @@
                                     <goal>build</goal>
                                 </goals>
                                 <configuration>
+                                    <skip>${skipITs}</skip>
                                     <images>
                                         <image>
                                             <name>connectimg</name>
@@ -286,125 +291,129 @@
                                                         <inline>
                                                             <files>
                                                                 <file>
-                                                                <source>${project.build.directory}/test-classes/config/cache-config.xml</source>
-                                                            </file>
-                                                            <file>
-                                                                <source>${project.build.directory}/test-classes/config/pof-config.xml</source>
-                                                            </file>
-                                                            <file>
-                                                                <source>${project.build.directory}/test-classes/config/tangosol-coherence-override.xml</source>
-                                                            </file>
-                                                        </files>
-                                                    </inline>
+                                                                    <source>${project.build.directory}/test-classes/config/cache-config.xml</source>
+                                                                </file>
+                                                                <file>
+                                                                    <source>${project.build.directory}/test-classes/config/pof-config.xml</source>
+                                                                </file>
+                                                                <file>
+                                                                    <source>${project.build.directory}/test-classes/config/tangosol-coherence-override.xml</source>
+                                                                </file>
+                                                            </files>
+                                                        </inline>
                                                     <targetDir>/usr/share/java/kafka/config</targetDir>
-                                                </assembly>
-                                            </assemblies>
-                                            <runCmds>
-                                                <run>confluent-hub install --no-prompt /etc/kafka-connect/jars/oracle-${project.artifactId}-${project.version}.zip</run>
-                                                <!-- copy test classes for same classloader as plugin to be used -->
-                                                <run>cp /tmp/oracle-${project.artifactId}/* /usr/share/confluent-hub-components/oracle-${project.artifactId}</run>
-                                            </runCmds>
-                                        </build>
-                                    </image>
-                                </images>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>prepare-kafka</id>
-                            <phase>pre-integration-test</phase>
-                            <goals>
-                                <goal>start</goal>
-                            </goals>
-                            <configuration>
-                                <autoCreateCustomNetworks>true</autoCreateCustomNetworks>
-                                <images>
-                                    <image>
-                                        <name>confluentinc/cp-zookeeper:latest</name>
-                                        <alias>zookeeper</alias>
-                                        <run>
-                                            <ports>
-                                                <port>2181:2181</port>
-                                            </ports>
-                                            <network>
-                                                <name>kafka</name>
-                                            </network>
-                                            <hostname>zookeeper</hostname>
-                                            <env>
-                                                <ZOOKEEPER_CLIENT_PORT>2181</ZOOKEEPER_CLIENT_PORT>
-                                            </env>
-                                            <wait>
-                                                <log>Created server</log>
-                                                <time>20000</time>
-                                            </wait>
-                                        </run>
-                                    </image>
-                                    <image>
-                                        <name>confluentinc/cp-kafka:latest</name>
-                                        <alias>kafka</alias>
-                                        <run>
-                                            <ports>
-                                                <port>19092:19092</port>
-                                            </ports>
-                                            <network>
-                                                <name>kafka</name>
-                                            </network>
-                                            <hostname>kafka</hostname>
-                                            <env>
-                                                <KAFKA_ZOOKEEPER_CONNECT>zookeeper:2181</KAFKA_ZOOKEEPER_CONNECT>
-                                                <KAFKA_ADVERTISED_LISTENERS>PLAINTEXT://kafka:9092,CONNECTIONS_FROM_HOST://localhost:19092</KAFKA_ADVERTISED_LISTENERS>
-                                                <KAFKA_LISTENER_SECURITY_PROTOCOL_MAP>PLAINTEXT:PLAINTEXT,CONNECTIONS_FROM_HOST:PLAINTEXT</KAFKA_LISTENER_SECURITY_PROTOCOL_MAP>
-                                                <KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR>1</KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR>
-                                            </env>
-                                            <wait>
-                                                <log>\[KafkaServer id=.*\] started</log>
-                                                <time>20000</time>
-                                            </wait>
-                                        </run>
-                                    </image>
-                                    <image>
-                                        <name>connectimg</name>
-                                        <alias>connect</alias>
-                                        <run>
-                                            <ports>
-                                                <port>8083:8083</port>
-                                                <port>7077:7077</port>
-                                            </ports>
-                                            <hostname>connect</hostname>
-                                            <network>
-                                                <name>kafka</name>
-                                            </network>
-                                            <env>
-                                                <CONNECT_BOOTSTRAP_SERVERS>kafka:9092</CONNECT_BOOTSTRAP_SERVERS>
-                                                <CONNECT_GROUP_ID>coherence</CONNECT_GROUP_ID>
-                                                <CONNECT_REST_PORT>8083</CONNECT_REST_PORT>
-                                                <CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR>1</CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR>
-                                                <CONNECT_CONFIG_STORAGE_TOPIC>coherence-config</CONNECT_CONFIG_STORAGE_TOPIC>
-                                                <CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR>1</CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR>
-                                                <CONNECT_OFFSET_STORAGE_TOPIC>coherence-offsets</CONNECT_OFFSET_STORAGE_TOPIC>
-                                                <CONNECT_STATUS_STORAGE_REPLICATION_FACTOR>1</CONNECT_STATUS_STORAGE_REPLICATION_FACTOR>
-                                                <CONNECT_STATUS_STORAGE_TOPIC>coherence-status</CONNECT_STATUS_STORAGE_TOPIC>
-                                                <CONNECT_KEY_CONVERTER>org.apache.kafka.connect.storage.StringConverter</CONNECT_KEY_CONVERTER>
-                                                <CONNECT_VALUE_CONVERTER>com.oracle.coherence.kafka.connect.util.CustomConverter</CONNECT_VALUE_CONVERTER>
-                                                <CONNECT_REST_ADVERTISED_HOST_NAME>localhost</CONNECT_REST_ADVERTISED_HOST_NAME>
-                                                <CONNECT_PLUGIN_PATH>/usr/share/confluent-hub-components</CONNECT_PLUGIN_PATH>
-                                                <!-- for loading Coherence config files -->
-                                                <CLASSPATH>/usr/share/java/kafka/config</CLASSPATH>
-                                            </env>
-                                            <wait>
-                                                <log>Successfully joined group</log>
-                                                <time>30000</time>
-                                            </wait>
-                                        </run>
-                                    </image>
-                                </images>
-                            </configuration>
-                        </execution>
+                                                    </assembly>
+                                                </assemblies>
+                                                <runCmds>
+                                                    <run>confluent-hub install --no-prompt /etc/kafka-connect/jars/oracle-${project.artifactId}-${project.version}.zip</run>
+                                                    <!-- copy test classes for same classloader as plugin to be used -->
+                                                    <run>cp /tmp/oracle-${project.artifactId}/* /usr/share/confluent-hub-components/oracle-${project.artifactId}</run>
+                                                </runCmds>
+                                            </build>
+                                        </image>
+                                    </images>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>prepare-kafka</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>start</goal>
+                                </goals>
+                                <configuration>
+                                    <skip>${skipITs}</skip>
+                                    <autoCreateCustomNetworks>true</autoCreateCustomNetworks>
+                                    <images>
+                                        <image>
+                                            <name>confluentinc/cp-zookeeper:latest</name>
+                                            <alias>zookeeper</alias>
+                                            <run>
+                                                <ports>
+                                                    <port>2181:2181</port>
+                                                </ports>
+                                                <network>
+                                                    <name>kafka</name>
+                                                </network>
+                                                <hostname>zookeeper</hostname>
+                                                <env>
+                                                    <ZOOKEEPER_CLIENT_PORT>2181</ZOOKEEPER_CLIENT_PORT>
+                                                </env>
+                                                <wait>
+                                                    <log>Created server</log>
+                                                    <time>20000</time>
+                                                </wait>
+                                            </run>
+                                        </image>
+                                        <image>
+                                            <name>confluentinc/cp-kafka:latest</name>
+                                            <alias>kafka</alias>
+                                            <run>
+                                                <ports>
+                                                    <port>19092:19092</port>
+                                                </ports>
+                                                <network>
+                                                    <name>kafka</name>
+                                                </network>
+                                                <hostname>kafka</hostname>
+                                                <env>
+                                                    <KAFKA_ZOOKEEPER_CONNECT>zookeeper:2181</KAFKA_ZOOKEEPER_CONNECT>
+                                                    <KAFKA_ADVERTISED_LISTENERS>PLAINTEXT://kafka:9092,CONNECTIONS_FROM_HOST://localhost:19092</KAFKA_ADVERTISED_LISTENERS>
+                                                    <KAFKA_LISTENER_SECURITY_PROTOCOL_MAP>PLAINTEXT:PLAINTEXT,CONNECTIONS_FROM_HOST:PLAINTEXT</KAFKA_LISTENER_SECURITY_PROTOCOL_MAP>
+                                                    <KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR>1</KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR>
+                                                </env>
+                                                <wait>
+                                                    <log>\[KafkaServer id=.*\] started</log>
+                                                    <time>20000</time>
+                                                </wait>
+                                            </run>
+                                        </image>
+                                        <image>
+                                            <name>connectimg</name>
+                                            <alias>connect</alias>
+                                            <run>
+                                                <ports>
+                                                    <port>8083:8083</port>
+                                                    <port>7077:7077</port>
+                                                </ports>
+                                                <hostname>connect</hostname>
+                                                <network>
+                                                    <name>kafka</name>
+                                                </network>
+                                                <env>
+                                                    <CONNECT_BOOTSTRAP_SERVERS>kafka:9092</CONNECT_BOOTSTRAP_SERVERS>
+                                                    <CONNECT_GROUP_ID>coherence</CONNECT_GROUP_ID>
+                                                    <CONNECT_REST_PORT>8083</CONNECT_REST_PORT>
+                                                    <CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR>1</CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR>
+                                                    <CONNECT_CONFIG_STORAGE_TOPIC>coherence-config</CONNECT_CONFIG_STORAGE_TOPIC>
+                                                    <CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR>1</CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR>
+                                                    <CONNECT_OFFSET_STORAGE_TOPIC>coherence-offsets</CONNECT_OFFSET_STORAGE_TOPIC>
+                                                    <CONNECT_STATUS_STORAGE_REPLICATION_FACTOR>1</CONNECT_STATUS_STORAGE_REPLICATION_FACTOR>
+                                                    <CONNECT_STATUS_STORAGE_TOPIC>coherence-status</CONNECT_STATUS_STORAGE_TOPIC>
+                                                    <CONNECT_KEY_CONVERTER>org.apache.kafka.connect.storage.StringConverter</CONNECT_KEY_CONVERTER>
+                                                    <CONNECT_VALUE_CONVERTER>com.oracle.coherence.kafka.connect.util.CustomConverter</CONNECT_VALUE_CONVERTER>
+                                                    <CONNECT_REST_ADVERTISED_HOST_NAME>localhost</CONNECT_REST_ADVERTISED_HOST_NAME>
+                                                    <CONNECT_PLUGIN_PATH>/usr/share/confluent-hub-components</CONNECT_PLUGIN_PATH>
+                                                    <!-- for loading Coherence config files -->
+                                                    <CLASSPATH>/usr/share/java/kafka/config</CLASSPATH>
+                                                </env>
+                                                <wait>
+                                                    <log>Successfully joined group</log>
+                                                    <time>30000</time>
+                                                </wait>
+                                            </run>
+                                        </image>
+                                    </images>
+                                </configuration>
+                            </execution>
                             <execution>
                                 <id>remove-kafka</id>
                                 <phase>post-integration-test</phase>
                                 <goals>
                                     <goal>stop</goal>
                                 </goals>
+                                <configuration>
+                                    <skip>${skipITs}</skip>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
@@ -417,6 +426,9 @@
                                     <goal>integration-test</goal>
                                     <goal>verify</goal>
                                 </goals>
+                                <configuration>
+                                    <skip>${skipITs}</skip>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
@@ -437,7 +449,7 @@
                         <artifactId>maven-gpg-plugin</artifactId>
                         <version>${maven.gpg.plugin.version}</version>
                         <configuration>
-                            <skip>false</skip>
+                            <skip>true</skip>
                         </configuration>
                     </plugin>
                     <plugin>
@@ -446,7 +458,7 @@
                         <version>${nexus.staging.maven.plugin.version}</version>
                         <extensions>true</extensions>
                         <configuration>
-                            <skipNexusStagingDeployMojo>false</skipNexusStagingDeployMojo>
+                            <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
                             <skipLocalStaging>true</skipLocalStaging>
                         </configuration>
                     </plugin>
