@@ -19,6 +19,34 @@
     Oracle Coherence integration with Apache Kafka (and Confluent Platform)
   </description>
 
+  <url>https://coherence.community/</url>
+  <inceptionYear>2021</inceptionYear>
+
+  <organization>
+    <name>Oracle</name>
+    <url>http://www.oracle.com</url>
+  </organization>
+
+  <scm child.scm.developerConnection.inherit.append.path="false"
+       child.scm.connection.inherit.append.path="false"
+       child.scm.url.inherit.append.path="false">
+    <developerConnection>scm:git:git@github.com:oracle/coherence-kafka.git</developerConnection>
+    <connection>scm:git:git@github.com:oracle/coherence-kafka.git</connection>
+    <tag>HEAD</tag>
+    <url>https://github.com/oracle/coherence-kafka</url>
+  </scm>
+
+  <developers>
+    <developer>
+      <name>Maurice Gamanho</name>
+      <url>https://github.com/mgamanho</url>
+    </developer>
+    <developer>
+      <name>Chinmay Patel</name>
+      <url>https://github.com/chpatel3</url>
+    </developer>
+  </developers>
+
   <modules>
     <module>coherence-kafka-core</module>
     <module>coherence-kafka-pof</module>
