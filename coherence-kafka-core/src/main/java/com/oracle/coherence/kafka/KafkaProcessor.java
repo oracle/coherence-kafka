@@ -17,8 +17,6 @@ import com.tangosol.run.xml.XmlHelper;
 /**
  * Element processor that will parse a kafka:producer element
  *
- * @author
- * @since
  */
 @XmlSimpleName("producer")
 public class KafkaProcessor

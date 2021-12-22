@@ -40,7 +40,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
  * <p>
  * It passes the properties to be used by the Kafka producer according to the version
  * of kafka used. The properties are translated from configuration as such:
- * {@code bootstrap-servers} -> {@code bootstrap.servers}, etc.
+ * {@code bootstrap-servers} -&gt; {@code bootstrap.servers}, etc.
  * <p>
  * For example:
  * <pre>{@code

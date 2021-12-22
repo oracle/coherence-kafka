@@ -19,6 +19,7 @@
   <artifactId>coherence-kafka-core</artifactId>
   <version>${revision}</version>
 
+  <name>Coherence Kafka Core Integration</name>
   <description>
     Core integration functionality between Coherence and Kafka
   </description>

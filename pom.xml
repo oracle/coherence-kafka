@@ -15,6 +15,7 @@
   <version>${revision}</version>
   <packaging>pom</packaging>
   
+  <name>Coherence Kafka</name>
   <description>
     Oracle Coherence integration with Apache Kafka (and Confluent Platform)
   </description>
@@ -181,11 +182,27 @@
 
   <build>
     <plugins>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${maven.compiler.plugin.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>${maven.javadoc.plugin.version}</version>
+        <configuration>
+          <source>11</source>
+        </configuration>
+        <executions>
+          <execution>
+            <id>javadoc</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>javadoc</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -197,7 +214,6 @@
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>${maven.failsafe.plugin.version}</version>
       </plugin>
-
     </plugins>
   </build>
 
@@ -290,8 +306,17 @@
             <artifactId>maven-javadoc-plugin</artifactId>
             <version>${maven.javadoc.plugin.version}</version>
             <configuration>
-                <source>11</source>
+              <source>11</source>
             </configuration>
+            <executions>
+              <execution>
+                <id>javadoc</id>
+                <phase>process-classes</phase>
+                <goals>
+                  <goal>javadoc</goal>
+                </goals>
+              </execution>
+            </executions>
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -306,7 +331,6 @@
               </execution>
             </executions>
           </plugin>
-
           <plugin>
             <groupId>org.sonatype.plugins</groupId>
             <artifactId>nexus-staging-maven-plugin</artifactId>

@@ -18,6 +18,7 @@
   <artifactId>coherence-kafka-pof</artifactId>
   <version>${revision}</version>
 
+  <name>Coherence Kafka POF Serialization Support</name>
   <description>
     Portable Object Format (POF) serialization support for Apache Kafka
   </description>

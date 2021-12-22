@@ -21,6 +21,7 @@
     <artifactId>coherence-kafka-sink</artifactId>
     <version>${revision}</version>
 
+    <name>Coherence Kafka Connect Plugin</name>
     <description>A Kafka Connect plugin for copying data into Coherence</description>
 
     <properties>
