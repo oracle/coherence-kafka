@@ -202,6 +202,12 @@
               <goal>javadoc</goal>
             </goals>
           </execution>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
         </executions>
       </plugin>
       <plugin>
@@ -314,6 +320,12 @@
                 <phase>process-classes</phase>
                 <goals>
                   <goal>javadoc</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
                 </goals>
               </execution>
             </executions>
