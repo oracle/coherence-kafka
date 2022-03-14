@@ -1,6 +1,8 @@
 # coherence-kafka
 Coherence integration with Apache Kafka
 
+Supported on Coherence CE 21.06 and later.
+
 The following components are provided:
 
 - Kafka Entry Store - a CacheStore type of extension that copies data from a Coherence map to a Kafka topic upon modification. This is contained in the `coherence-kafka-core` project.
