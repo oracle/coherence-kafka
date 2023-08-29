@@ -147,6 +147,7 @@ Please consult the [security guide](./SECURITY.md) for our responsible security 
 
 ## License
 
-Copyright (c) 2021 Oracle and/or its affiliates.
+Copyright (c) 2021, 2023g Oracle and/or its affiliates.
 
 Released under the Universal Permissive License v1.0 as shown at
+<https://oss.oracle.com/licenses/upl/>.
