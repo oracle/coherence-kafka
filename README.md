@@ -1,6 +1,7 @@
 # Coherence integration with Apache Kafka
 
-This project provides component libraries that support moving data from a Coherence map to a Kafka topi and vice-versa.
+This project provides component libraries that support moving data from a Coherence map to a Kafka topic and vice versa.
+
 Supported on Coherence CE 21.06 and later.
 
 ## Getting Started
