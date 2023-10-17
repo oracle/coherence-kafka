@@ -152,8 +152,8 @@ public class SinkTestIT
         getCache();
         }
 
-    //@Test
-    //@Order(6)
+    @Test
+    @Order(6)
     public void testPOF() throws Exception
         {
         Producer<String, Person> producer = new KafkaProducer<>(setupProps(true));
