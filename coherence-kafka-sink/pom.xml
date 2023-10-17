@@ -29,7 +29,7 @@
         <maven.compiler.source>${maven.compiler.release}</maven.compiler.source>
         <maven.compiler.target>${maven.compiler.release}</maven.compiler.target>
         <kafka.connect.maven.plugin.version>0.11.1</kafka.connect.maven.plugin.version>
-        <oracle.bedrock.version>5.1.2</oracle.bedrock.version>
+        <oracle.bedrock.version>6.0.2</oracle.bedrock.version>
         <javax.json.version>1.1.4</javax.json.version>
         <javax.json.bind.version>1.0</javax.json.bind.version>
         <yasson.version>1.0.9</yasson.version>
@@ -253,7 +253,7 @@
                                 <image>
                                     <name>connectimg</name>
                                     <build>
-                                        <from>confluentinc/cp-kafka-connect-base:7.3.1</from>
+                                        <from>confluentinc/cp-kafka-connect-base:7.3.3</from>
                                         <assemblies>
                                             <assembly>
                                                 <name>connect-plugin</name>
