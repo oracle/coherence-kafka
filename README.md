@@ -1,12 +1,17 @@
-# coherence-kafka
-Coherence integration with Apache Kafka
+# Coherence integration with Apache Kafka
 
+This project provides component libraries that support moving data from a Coherence map to a Kafka topi and vice-versa.
 Supported on Coherence CE 21.06 and later.
 
-The following components are provided:
+## Getting Started
 
-- Kafka Entry Store - a CacheStore type of extension that copies data from a Coherence map to a Kafka topic upon modification. This is contained in the `coherence-kafka-core` project.
-- Kafka Sink Connector - an Apache Kafka Connect plugin of type "sink", which copies data posted to a Kafka topic to a Coherence map. This is contained in the `coherence-kafka-sink` project
+The Coherence Kafka integration project publishes a set of jar dependencies that you use in your application.
+There is nothing to install, you use the Maven modules just as you would any other Java dependencies.
+
+## The following components are provided
+
+- **Kafka Entry Store** - a CacheStore type of extension that copies data from a Coherence map to a Kafka topic upon modification. This is contained in the `coherence-kafka-core` project.
+- **Kafka Sink Connector** - an Apache Kafka Connect plugin of type "sink", which copies data posted to a Kafka topic to a Coherence map. This is contained in the `coherence-kafka-sink` project
 
 Serializers and deserializers can be configured to handle data to and from Kafka, or an optimized pass-through mode will handle serialized entries which are already in a Coherence binary form.
 
