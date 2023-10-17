@@ -253,7 +253,7 @@
                                 <image>
                                     <name>connectimg</name>
                                     <build>
-                                        <from>confluentinc/cp-kafka-connect-base:7.1.5</from>
+                                        <from>confluentinc/cp-kafka-connect-base:7.4.0</from>
                                         <assemblies>
                                             <assembly>
                                                 <name>connect-plugin</name>
