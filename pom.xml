@@ -75,7 +75,7 @@
 
     <coherence.version>22.06.5</coherence.version>
     <coherence.groupId>com.oracle.coherence.ce</coherence.groupId>
-    <kafka.version>3.6.0</kafka.version>
+    <kafka.version>3.9.0</kafka.version>
 
     <junit.jupiter.version>5.7.2</junit.jupiter.version>
 
