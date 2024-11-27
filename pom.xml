@@ -73,7 +73,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <coherence.version>22.06.5</coherence.version>
+    <coherence.version>22.06.10</coherence.version>
     <coherence.groupId>com.oracle.coherence.ce</coherence.groupId>
     <kafka.version>3.9.0</kafka.version>
 
