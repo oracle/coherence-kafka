@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright (c) 2021 Oracle and/or its affiliates.
+  Copyright (c) 2021, 2025 Oracle and/or its affiliates.
 
   Licensed under the Universal Permissive License v 1.0 as shown at
   https://oss.oracle.com/licenses/upl.
@@ -29,7 +29,7 @@
         <maven.compiler.source>${maven.compiler.release}</maven.compiler.source>
         <maven.compiler.target>${maven.compiler.release}</maven.compiler.target>
         <kafka.connect.maven.plugin.version>0.11.1</kafka.connect.maven.plugin.version>
-        <oracle.bedrock.version>6.0.2</oracle.bedrock.version>
+        <oracle.bedrock.version>7.0.6</oracle.bedrock.version>
         <javax.json.version>1.1.4</javax.json.version>
         <javax.json.bind.version>1.0</javax.json.bind.version>
         <yasson.version>1.0.9</yasson.version>
