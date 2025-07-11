@@ -41,13 +41,13 @@ jobs:
 #
 #    - name: Set DOCKER_HOST
 #      run: echo "DOCKER_HOST=tcp://localhost:2375" >> $GITHUB_ENV
-
-    - name: Cache Maven packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2
+#
+#    - name: Cache Maven packages
+#      uses: actions/cache@v4
+#      with:
+#        path: ~/.m2
+#        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+#        restore-keys: ${{ runner.os }}-m2
 
     - name: Build with Maven
       run: mvn -B clean install package --file pom.xml
