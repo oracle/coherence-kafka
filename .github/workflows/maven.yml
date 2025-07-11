@@ -7,9 +7,7 @@ on:
   push:
     branches:
       - '*'
-  pull_request:
-    branches: [ main ]
-    
+
 jobs:
   build:
     runs-on: ubuntu-24.04
@@ -22,27 +20,27 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
-
-    - name: Set up Docker-in-Docker
-      run: |
-        docker run -d --privileged --name dind \
-          -e DOCKER_TLS_CERTDIR= \
-          -p 2375:2375 \
-          docker:dind
-
-    - name: Wait for Docker daemon
-      run: |
-        for i in {1..20}; do
-          if docker -H tcp://localhost:2375 info > /dev/null 2>&1; then
-            echo "Docker is ready"
-            break
-          fi
-          echo "Waiting for Docker..."
-          sleep 2
-        done     
-
-    - name: Set DOCKER_HOST
-      run: echo "DOCKER_HOST=tcp://localhost:2375" >> $GITHUB_ENV
+#
+#    - name: Set up Docker-in-Docker
+#      run: |
+#        docker run -d --privileged --name dind \
+#          -e DOCKER_TLS_CERTDIR= \
+#          -p 2375:2375 \
+#          docker:dind
+#
+#    - name: Wait for Docker daemon
+#      run: |
+#        for i in {1..20}; do
+#          if docker -H tcp://localhost:2375 info > /dev/null 2>&1; then
+#            echo "Docker is ready"
+#            break
+#          fi
+#          echo "Waiting for Docker..."
+#          sleep 2
+#        done
+#
+#    - name: Set DOCKER_HOST
+#      run: echo "DOCKER_HOST=tcp://localhost:2375" >> $GITHUB_ENV
 
     - name: Cache Maven packages
       uses: actions/cache@v4
